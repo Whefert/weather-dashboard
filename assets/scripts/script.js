@@ -30,12 +30,12 @@ async function fetchCityLatAndLong(cityName) {
 async function fetchCityWeatherForecast(cityName) {
   const coordinates = await fetchCityLatAndLong(cityName);
   const response = await fetch(
-    `https://api.openweathermap.org/data/2.5/forecast?lat=${coordinates.lat}&lon=${coordinates.lon}&appid=${openWeatherAPIKey}`
+    `https://api.openweathermap.org/data/2.5/forecast?lat=${coordinates.lat}&lon=${coordinates.lon}&appid=${openWeatherAPIKey}&units=metric`
   );
 
   const weatherForecast = await response.json();
   const res = await fetch(
-    `https://api.openweathermap.org/data/2.5/weather?lat=${coordinates.lat}&lon=${coordinates.lon}&appid=${openWeatherAPIKey}`
+    `https://api.openweathermap.org/data/2.5/weather?lat=${coordinates.lat}&lon=${coordinates.lon}&appid=${openWeatherAPIKey}&units=metric`
   );
 
   let currentWeather = await res.json();
@@ -57,7 +57,7 @@ function updateCurrentWeather(currentWeather) {
   $("#today .time").text(`Time: ${dayjs().format("HH:mm")}`);
   $("#today .weather").empty();
   $("#today .weather").append(showWeatherIcon(currentWeather.weather));
-  $("#today .temp").text(currentWeather.temp);
+  $("#today .temp").text(`${currentWeather.temp} °C`);
   $("#today .wind").text(currentWeather.wind);
   $("#today .humidity").text(currentWeather.humidity);
 }
@@ -87,7 +87,7 @@ function createForecastItems(weatherData) {
     let temp = $("<p>");
     let wind = $("<p>");
     let humidity = $("<p>");
-    temp.text(`Temp: ${weather.main.temp}`);
+    temp.text(`Temp: ${weather.main.temp} °C`);
     wind.text(`Wind: ${weather.wind.speed}`);
     humidity.text(`Humidity: ${weather.main.humidity}`);
     div.append(day);
@@ -115,6 +115,7 @@ function showPreviousSearches() {
 
 function init() {
   $("#history").empty();
+  fetchCityWeatherForecast("London");
   showPreviousSearches();
 }
 
@@ -127,7 +128,6 @@ $("#clear-search-button").on("click", () => {
   clearHistory();
 });
 
-init();
 $(".history-item").on("click", function (event) {
   city = event.target.dataset.city;
   fetchCityWeatherForecast(city);
@@ -144,3 +144,5 @@ function showWeatherIcon(weather) {
     return "<i class='bi bi-sun'></i>";
   }
 }
+
+init();
