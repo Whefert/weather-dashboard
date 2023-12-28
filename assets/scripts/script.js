@@ -21,7 +21,7 @@ $(".search-button").on("click", function (event) {
 
 async function fetchCityLatAndLong(cityName) {
   const response = await fetch(
-    `http://api.openweathermap.org/geo/1.0/direct?q=${cityName}&limit=1&appid=${openWeatherAPIKey}`
+    `https://api.openweathermap.org/geo/1.0/direct?q=${cityName}&limit=1&appid=${openWeatherAPIKey}`
   );
   cities = await response.json();
   return { lat: cities[0].lat, lon: cities[0].lon };
