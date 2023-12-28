@@ -39,23 +39,24 @@ async function fetchCityWeatherForecast(cityName) {
   );
 
   let currentWeather = await res.json();
-  console.dir(currentWeather);
-
+  console.log(currentWeather);
   let currentWeatherObj = {
     name: currentWeather.name,
     temp: currentWeather.main.temp,
     wind: currentWeather.wind.speed,
     humidity: currentWeather.main.humidity,
-    weather: currentWeather.weather.description,
+    weather: currentWeather.weather[0].main,
   };
   updateCurrentWeather(currentWeatherObj);
-  // createForecastItems(weatherForecast.list);
+  createForecastItems(weatherForecast.list);
 }
 
 function updateCurrentWeather(currentWeather) {
   $("#today .city").text(currentWeather.name);
   $("#today .date").text(`(${dayjs().format("DD/MM/YYYY")})`);
-  // $("span.clouds").text();
+  $("#today .time").text(`Time: ${dayjs().format("HH:mm")}`);
+  $("#today .weather").empty();
+  $("#today .weather").append(showWeatherIcon(currentWeather.weather));
   $("#today .temp").text(currentWeather.temp);
   $("#today .wind").text(currentWeather.wind);
   $("#today .humidity").text(currentWeather.humidity);
@@ -64,30 +65,40 @@ function updateCurrentWeather(currentWeather) {
 function createForecastItems(weatherData) {
   $("#fiveDayForecast").empty();
   for (let i = 1; i < 6; i++) {
-    const row = $(`<div class='row gx-2 my-2'  id='row_${i}'>`);
+    const row = $(
+      `<div class='row my-2 d-flex justify-content-between' id='row_${i}'>`
+    );
     $("#fiveDayForecast").append(row);
   }
 
   for (let i = 0; i < weatherData.length; i++) {
     const weather = weatherData[i];
     //create forecast element
-    const div = $("<div>");
-    div.addClass("col mx-2 flex-column forecastDay text-white pt-3");
-    date = $("<p>");
+    const div = $(
+      "<div class='col col-lg-2 mx-1 mb-2 flex-column forecastDay text-white text-center pt-3'>"
+    );
+    let day = $("<h5>");
+    let date = $("<p>");
+    day.text(dayjs.unix(weather.dt).format("dddd"));
     date.text(dayjs.unix(weather.dt).format("DD/MM/YYYY"));
+    let time = $("<p>");
+    time.text(`Time: ${dayjs.unix(weather.dt).format("HH:mm:")}`);
+    let clouds = $(showWeatherIcon(weather.weather[0].main));
+    let temp = $("<p>");
+    let wind = $("<p>");
+    let humidity = $("<p>");
+    temp.text(`Temp: ${weather.main.temp}`);
+    wind.text(`Wind: ${weather.wind.speed}`);
+    humidity.text(`Humidity: ${weather.main.humidity}`);
+    div.append(day);
     div.append(date);
-    //Add element to Dom
-    if (i < 9) {
-      $("#row_1").append(div);
-    } else if (i < 17) {
-      $("#row_2").append(div);
-    } else if (i < 25) {
-      $("#row_3").append(div);
-    } else if (i < 33) {
-      $("#row_4").append(div);
-    } else {
-      $("#row_5").append(div);
-    }
+    div.append(time);
+    div.append(clouds);
+    div.append(temp);
+    div.append(wind);
+    div.append(humidity);
+
+    $("#row_1").append(div);
   }
 }
 
@@ -95,7 +106,7 @@ function showPreviousSearches() {
   for (let i = 1; i < localStorage.length + 1; i++) {
     let city = localStorage.getItem(`searchItem_${i}`);
     let historyItem = $(
-      `<button class='btn btn-secondary mb-2 history-item' data-city='${city}'>`
+      `<button class='btn btn-secondary mb-2 history-item text-capitalize' data-city='${city.to}'>`
     );
     historyItem.append(city);
     $("#history").append(historyItem);
@@ -121,3 +132,15 @@ $(".history-item").on("click", function (event) {
   city = event.target.dataset.city;
   fetchCityWeatherForecast(city);
 });
+
+function showWeatherIcon(weather) {
+  if (weather === "Rain") {
+    return "<i class='bi bi-cloud-rain-heavy'></i>";
+  } else if (weather === "Clouds") {
+    return "<i class='bi bi-clouds'></i>";
+  } else if (weather === "Snow") {
+    return "<i class='bi bi-cloud-snow'></i>";
+  } else {
+    return "<i class='bi bi-sun'></i>";
+  }
+}
