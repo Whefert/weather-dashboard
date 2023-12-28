@@ -1,13 +1,16 @@
 const openWeatherAPIKey = "4974ac4d803cd7f639c43cfd1f563096";
 let cityLatitude, cityLongitude;
 
-//on click of search button, take search input value, add it to local storage
+//on click of search button,
 $("form").on("submit", function (event) {
   //stop default behaviour of form
   event.preventDefault();
   //Get the city name for search
   let city = $("#search-input").val();
 
+  //take search input value, add it to local storage
+  localStorage.setItem(`searchItem_${localStorage.length + 1}`, city);
+  showPreviousSearches();
   if (!city) {
     alert("Search cannot be empty. Please input the name of a city");
     return;
@@ -66,3 +69,18 @@ function createForecastItems(weatherData) {
     }
   }
 }
+
+function showPreviousSearches() {
+  for (let i = 1; i < localStorage.length + 1; i++) {
+    let historyItem = $("<button class='btn btn-secondary mb-2'>");
+    historyItem.append(localStorage.getItem(`searchItem_${i}`));
+    $("#history").append(historyItem);
+  }
+}
+
+function init() {
+  $("#history").empty();
+  showPreviousSearches();
+}
+
+init();
