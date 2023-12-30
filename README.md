@@ -34,7 +34,7 @@ N/A
 
 ## Usage
 
-- To find the weather forecast for a give city, simply enter the city name into the search input and click the search button.
+- To find the weather forecast for a given city, simply enter the city name into the search input and click the search button.
 
 ## Credits
 
