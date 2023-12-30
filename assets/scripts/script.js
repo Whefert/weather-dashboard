@@ -151,6 +151,8 @@ function showWeatherIcon(weather) {
     return "<i class='bi bi-clouds'></i>";
   } else if (weather === "Snow") {
     return "<i class='bi bi-cloud-snow'></i>";
+  } else if (weather === "Haze") {
+    return "<i class='bi bi-cloud-haze'></i>";
   } else {
     return "<i class='bi bi-sun'></i>";
   }
