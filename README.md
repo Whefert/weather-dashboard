@@ -2,7 +2,7 @@
 
 ## Description
 
-A weather dashboard that runs in the browser and feature dynamically updated HTML and CSS. The dashboard uses the [5 Day Weather Forecast](https://openweathermap.org/forecast5) API to retrieve weather data for cities. The OpenWeatherMap APIs is used to retrieve the geographical coordinates for the given city name. User searches are stored in `localStorage` for data persistence.
+A weather dashboard that runs in the browser and features dynamically updated HTML and CSS. The dashboard uses the [5 Day Weather Forecast](https://openweathermap.org/forecast5) API to retrieve weather data for cities. The OpenWeatherMap API is used to retrieve the geographical coordinates for the given city name. User searches are stored in `localStorage` for data persistence.
 
 Here is the link to the deployed application: https://whefert.github.io/weather-dashboard/
 
@@ -21,7 +21,7 @@ See a demo recording of the application below:
     - The temperature
     - The humidity
     - The wind speed
-  - When a user view future weather conditions for that city they are presented with a 5-day forecast that displays:
+  - When a user views future weather conditions for that city they are presented with a 5-day forecast that displays:
     - The date
     - An icon representation of weather conditions
     - The temperature
