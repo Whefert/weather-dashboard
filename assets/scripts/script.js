@@ -14,21 +14,30 @@ $(".search-button").on("click", function (event) {
     alert("Search cannot be empty. Please input the name of a city");
     return;
   }
-  localStorage.setItem(`searchItem_${localStorage.length + 1}`, city);
-  showPreviousSearches();
+
   fetchCityWeatherForecast(city);
+  showPreviousSearches();
 });
 
 async function fetchCityLatAndLong(cityName) {
   const response = await fetch(
     `https://api.openweathermap.org/geo/1.0/direct?q=${cityName}&limit=1&appid=${openWeatherAPIKey}`
   );
+
   cities = await response.json();
-  return { lat: cities[0].lat, lon: cities[0].lon };
+  if (cities.length == 0) {
+    return;
+  } else {
+    return { lat: cities[0].lat, lon: cities[0].lon };
+  }
 }
 
 async function fetchCityWeatherForecast(cityName) {
   const coordinates = await fetchCityLatAndLong(cityName);
+  if (!coordinates) {
+    alert("Invalid city, please try again");
+    return;
+  }
   const response = await fetch(
     `https://api.openweathermap.org/data/2.5/forecast?lat=${coordinates.lat}&lon=${coordinates.lon}&appid=${openWeatherAPIKey}&units=metric`
   );
@@ -39,9 +48,9 @@ async function fetchCityWeatherForecast(cityName) {
   );
 
   let currentWeather = await res.json();
-  console.log(currentWeather);
   let currentWeatherObj = {
     name: currentWeather.name,
+    time: currentWeather.dt,
     temp: currentWeather.main.temp,
     wind: currentWeather.wind.speed,
     humidity: currentWeather.main.humidity,
@@ -49,12 +58,14 @@ async function fetchCityWeatherForecast(cityName) {
   };
   updateCurrentWeather(currentWeatherObj);
   createForecastItems(weatherForecast.list);
+  localStorage.setItem(`searchItem_${localStorage.length + 1}`, cityName);
+  showPreviousSearches();
 }
 
 function updateCurrentWeather(currentWeather) {
   $("#today .city").text(currentWeather.name);
   $("#today .date").text(`(${dayjs().format("DD/MM/YYYY")})`);
-  $("#today .time").text(`Time: ${dayjs().format("HH:mm")}`);
+  $("#today .time").text(`Time: ${dayjs().format("HH:mm")} (GMT)`);
   $("#today .weather").empty();
   $("#today .weather").append(showWeatherIcon(currentWeather.weather));
   $("#today .temp").text(`${currentWeather.temp} °C`);
@@ -103,20 +114,25 @@ function createForecastItems(weatherData) {
 }
 
 function showPreviousSearches() {
+  $("#history").empty();
   for (let i = 1; i < localStorage.length + 1; i++) {
     let city = localStorage.getItem(`searchItem_${i}`);
     let historyItem = $(
-      `<button class='btn btn-secondary mb-2 history-item text-capitalize' data-city='${city.to}'>`
+      `<button class='btn btn-secondary mb-2 history-item text-capitalize' data-city='${city}'>`
     );
     historyItem.append(city);
     $("#history").append(historyItem);
   }
+
+  $(".history-item").on("click", function (event) {
+    city = event.target.dataset.city;
+    fetchCityWeatherForecast(city);
+  });
 }
 
 function init() {
-  $("#history").empty();
   fetchCityWeatherForecast("London");
-  showPreviousSearches();
+  clearHistory();
 }
 
 function clearHistory() {
@@ -126,11 +142,6 @@ function clearHistory() {
 
 $("#clear-search-button").on("click", () => {
   clearHistory();
-});
-
-$(".history-item").on("click", function (event) {
-  city = event.target.dataset.city;
-  fetchCityWeatherForecast(city);
 });
 
 function showWeatherIcon(weather) {
