@@ -8,7 +8,7 @@ Here is the link to the deployed application: https://whefert.github.io/weather-
 
 See a demo recording of the application below:
 
-![The weather app includes a search option, a list of cities, and a five-day forecast and current weather conditions for searched cities.](./assets/images/weather-app-demo.gif)
+![The weather app includes a search option, a list of cities, and a five-day forecast and current weather conditions for searched cities.](./assets/images/weather-app-demo-gif.gif)
 
 ## Acceptance Criteria
 
