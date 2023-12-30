@@ -132,7 +132,7 @@ function showPreviousSearches() {
 
 function init() {
   fetchCityWeatherForecast("London");
-  clearHistory();
+  showPreviousSearches();
 }
 
 function clearHistory() {
