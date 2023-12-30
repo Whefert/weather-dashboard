@@ -68,7 +68,7 @@ function updateCurrentWeather(currentWeather) {
   $("#today .time").text(`Time: ${dayjs().format("HH:mm")} (GMT)`);
   $("#today .weather").empty();
   $("#today .weather").append(showWeatherIcon(currentWeather.weather));
-  $("#today .temp").text(`${currentWeather.temp}°C`);
+  $("#today .temp").text(`${currentWeather.temp} °C`);
   $("#today .wind").text(`${currentWeather.wind} m/s`);
   $("#today .humidity").text(`${currentWeather.humidity}%`);
 }
@@ -98,7 +98,7 @@ function createForecastItems(weatherData) {
     let temp = $("<p>");
     let wind = $("<p>");
     let humidity = $("<p>");
-    temp.text(`Temp: ${weather.main.temp}°C`);
+    temp.text(`Temp: ${weather.main.temp} °C`);
     wind.text(`Wind: ${weather.wind.speed} m/s`);
     humidity.text(`Humidity: ${weather.main.humidity}%`);
     div.append(day);
